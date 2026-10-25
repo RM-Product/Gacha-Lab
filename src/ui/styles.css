@@ -1,0 +1,2039 @@
+/* Layout: settings on the left, the season's results on the right; one column at phone width.
+   One deliberate dark look, so there is no light theme. Each colour means one thing: gold = the featured
+   5★, pink = a 5★ that lost the 50/50, cyan = gems, green = real money, grey = nothing yet. */
+:root {
+  color-scheme: dark;
+  /* The palette (5 Oct 2026) on a charcoal ground. Gold = the featured 5★, pink = a lost 50/50, cyan =
+     gems, greens = real money. Earlier grounds, for a quick switch back: navy #0a1020 / #131b2d / #1a2438, lines #253048, none
+     #5a6782; aubergine #15111c / #1d1726 / #251e30 with ink #f7e6da, gold #f2c68e, lilac #b8a1f6, money #19b820. */
+  --ground: #0f1012;
+  --panel: #18191c;
+  --panel-2: #202125;
+  --line: #2b2d32;
+  /* A second, brighter edge for the controls that open something: the dropdowns and the folding sections.
+     --line is too close to the ground to say "press me" (her note, 18 Oct 2026). */
+  --line-2: #42464f;
+  --line-soft: #222327;
+  --ink: #f6f8fc;
+  --ink-2: #d3dae6;
+  --muted: #aeb8cc;
+  /* Decided 5 Oct: the featured 5★ is gold, the usual 5★ colour in gacha games, and a 5★ that lost the
+     50/50 is pink, drawn as a ring so the shape tells them apart too. Gold and pink stay apart for colour-blind
+     viewers (ΔE 17.7 deutan, 25.7 normal); both sit above the validator's lightness band, which keeps a thin
+     ring visible on charcoal. */
+  --featured: #f7c548;
+  --lost: #ff6b9c;
+  --none: #62666e;
+  --gem: #69d7ff;
+  --money: #34c983;
+  --money-1: #168a5a;
+  --money-2: #34c983;
+  --money-3: #83e6b1;
+  --off: #ffb45e;
+  /* One typeface for words and numbers (decided 5 Oct 2026): proportional digits for standalone figures,
+     tabular-nums only where numbers line up in columns (tables, axis ticks, the pack prices). */
+  --font-ui: 'Bricolage Grotesque', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --radius: 16px;
+  --control: 34px;
+  --step: 28px;
+}
+
+@media (pointer: coarse) {
+  :root {
+    --control: 44px;
+    --step: 44px;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font: 400 15px/1.5 var(--font-ui);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--ink);
+  text-decoration-color: var(--muted);
+  text-underline-offset: 3px;
+}
+a:hover {
+  text-decoration-color: var(--ink);
+}
+
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+:focus-visible {
+  outline: 2px solid var(--gem);
+  outline-offset: 2px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.app {
+  max-width: 1480px;
+  margin: 0 auto;
+  padding-inline: clamp(16px, 3vw, 32px);
+  padding-block: 18px 40px;
+}
+
+/* Header */
+.top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 24px;
+  padding-block: 4px 18px;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.mark {
+  display: block;
+  width: 40px;
+  height: 40px;
+  flex: none;
+}
+.mark svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.brand-text {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 14px;
+}
+.name {
+  font-size: 24px;
+  font-weight: 750;
+  letter-spacing: -0.02em;
+}
+.tagline {
+  color: var(--muted);
+  font-size: 14px;
+}
+/* The name, tagline and three buttons need about 1,313px in one row; below that the tagline sits under the name,
+   which keeps the header about as tall as the logo. */
+@media (max-width: 1340px) {
+  .brand-text {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+  }
+  .name {
+    line-height: 1.15;
+  }
+}
+.top-actions .btn {
+  min-height: 34px;
+  padding: 0 13px;
+  font-size: 13.5px;
+}
+@media (pointer: coarse) {
+  .top-actions .btn {
+    min-height: 44px;
+  }
+}
+.top-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 16px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--ink);
+  font: 600 14px/1 var(--font-ui);
+  cursor: pointer;
+}
+.btn:hover {
+  background: var(--panel-2);
+  border-color: #3a3c42;
+}
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.btn svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.btn.primary {
+  background: var(--ink);
+  color: var(--ground);
+  border-color: var(--ink);
+}
+.btn.primary:hover {
+  background: #ffffff;
+}
+.btn.small {
+  min-height: 32px;
+  padding: 0 12px;
+  font-size: 13px;
+}
+@media (pointer: coarse) {
+  .btn.small {
+    min-height: 44px;
+  }
+}
+
+/* Layout */
+.layout {
+  display: grid;
+  grid-template-columns: minmax(300px, 340px) minmax(0, 1fr);
+  gap: 22px;
+  align-items: start;
+}
+@media (max-width: 1000px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Settings: one dashboard-style panel. Sample is pinned on top; the other sections fold and only one is open at
+   a time, so the panel stays about a screen tall. Rows are one line each: label left, control right. */
+.settings {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+}
+@media (min-width: 1001px) {
+  .settings {
+    position: sticky;
+    top: calc(env(safe-area-inset-top, 0px) + 12px);
+    max-height: calc(100vh - 24px);
+    overflow-y: auto;
+    scrollbar-width: thin;
+  }
+}
+.pinned {
+  padding: 12px 16px 10px;
+  border-bottom: 1px solid var(--line);
+}
+
+.side-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 2px;
+}
+.reset-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-right: -6px;
+  padding: 3px 6px;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  color: var(--muted);
+  font: 600 12px var(--font-ui);
+  cursor: pointer;
+}
+.reset-link:hover {
+  color: var(--ink);
+  background: var(--panel-2);
+}
+.reset-link span {
+  display: grid;
+}
+.reset-link svg {
+  width: 13px;
+  height: 13px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+@media (pointer: coarse) {
+  .reset-link {
+    min-height: 44px;
+  }
+}
+.side-title {
+  font-size: 11.5px;
+  font-weight: 650;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+/* A folding section is a row you press, so it looks like one: raised off the panel, a visible edge, and the
+   chevron in its own chip rather than a hairline tick (her note, 18 Oct 2026: too easy to miss). */
+.group {
+  padding: 0 10px;
+}
+.group:first-of-type {
+  padding-top: 8px;
+}
+.group:last-of-type {
+  padding-bottom: 10px;
+}
+.group > summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 8px 10px 10px;
+  border: 1px solid var(--line-2);
+  border-radius: 12px;
+  background: var(--panel-2);
+}
+.group + .group > summary {
+  margin-top: 6px;
+}
+.group > summary:hover {
+  background: #26272c;
+  border-color: #5a5f6a;
+}
+.group[open] > summary {
+  margin-bottom: 4px;
+  /* lighter than the closed edge, but well short of the ink the focus ring uses */
+  border-color: #7e8491;
+  background: #26272c;
+}
+.group > summary::-webkit-details-marker {
+  display: none;
+}
+/* The chevron chip. Open rotates the whole chip 180°: the rounded square looks the same either way, so only
+   the arrow appears to flip. */
+.group > summary::after {
+  content: '';
+  flex: none;
+  width: 26px;
+  height: 26px;
+  margin-left: auto;
+  border-radius: 8px;
+  background: var(--ground) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='26'%3E%3Cpath d='M9 11l4 4 4-4' fill='none' stroke='%23f6f8fc' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center;
+  border: 1px solid var(--line-2);
+  transition: transform 0.15s ease;
+}
+.group[open] > summary::after {
+  transform: rotate(180deg);
+}
+.g-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--panel-2);
+}
+.group > summary:hover .g-icon {
+  background: var(--ground);
+}
+.g-icon svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.g-icon.star {
+  color: var(--featured);
+}
+.g-icon.gem {
+  color: var(--gem);
+}
+.g-icon.people {
+  color: var(--ink-2);
+}
+.g-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.g-title {
+  font-size: 14.5px;
+  font-weight: 650;
+}
+.g-sum {
+  font-size: 12.5px;
+  line-height: 1.35;
+  color: var(--muted);
+  /* up to two lines, so a long preset name never hides "· first copy only" */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.group[open] .g-sum {
+  display: none;
+}
+.group-body {
+  padding: 2px 6px 10px;
+}
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 34px;
+  padding-block: 2px;
+}
+.row.stack {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+  padding-block: 4px 6px;
+}
+.row-label {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.row-name {
+  font-weight: 550;
+  font-size: 13.5px;
+}
+.hint {
+  font-size: 12.5px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+.hint.block {
+  display: block;
+  margin: 6px 0 2px;
+}
+.sub-head {
+  margin: 10px 0 4px;
+}
+.sub-head .row-name {
+  font-size: 11.5px;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.sub-rows .row {
+  padding-left: 12px;
+}
+.readout {
+  margin: 6px 0 0;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: var(--panel-2);
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--ink-2);
+}
+.readout b {
+  font-weight: 650;
+  color: var(--ink);
+}
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex: none;
+}
+.step {
+  width: var(--step);
+  height: var(--step);
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: var(--panel-2);
+  color: var(--ink);
+  font: 500 15px/1 var(--font-ui);
+  cursor: pointer;
+}
+.step:hover {
+  border-color: #3a3c42;
+}
+.num {
+  width: 84px;
+  height: var(--step);
+  padding: 0 4px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--ink);
+  font: 600 13.5px/1 var(--font-ui);
+  text-align: center;
+}
+.num:hover,
+.num:focus {
+  border-color: var(--line);
+  background: var(--ground);
+}
+.num.small {
+  width: 100%;
+  min-width: 0;
+  height: 26px;
+  font-variant-numeric: tabular-nums; /* the pack and player-mix tables are columns */
+  border-color: var(--line);
+  background: var(--ground);
+  font-size: 13px;
+}
+.num.derived {
+  border-color: transparent;
+  background: transparent;
+  color: var(--muted);
+}
+/* Dropdowns: a raised field with a brighter edge and a caret in its own chip, so a list you can open never
+   reads as a figure the page filled in (her note, 18 Oct 2026). */
+.select {
+  height: var(--control);
+  width: 100%;
+  padding: 0 38px 0 11px;
+  border-radius: 9px;
+  border: 1px solid var(--line-2);
+  background: var(--panel-2) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Crect x='.5' y='.5' width='23' height='23' rx='7' fill='%230f1012' stroke='%2342464f'/%3E%3Cpath d='M8 10l4 4 4-4' fill='none' stroke='%23f6f8fc' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 5px center;
+  color: var(--ink);
+  font: 550 13.5px var(--font-ui);
+  appearance: none;
+  cursor: pointer;
+}
+.select:hover {
+  border-color: #5a5f6a;
+  background-color: #26272c;
+}
+.select.small {
+  height: 28px;
+  font-size: 12.5px;
+  padding: 0 28px 0 7px;
+  background-size: 20px 20px;
+  background-position: right 3px center;
+}
+@media (pointer: coarse) {
+  .select.small {
+    height: 38px;
+  }
+}
+.segmented {
+  display: inline-grid;
+  /* one column per option, whatever the count: it was pinned at three, so a fourth sample size wrapped */
+  grid-auto-flow: column;
+  grid-auto-columns: auto;
+  gap: 2px;
+  padding: 2px;
+  border-radius: 9px;
+  background: var(--ground);
+  border: 1px solid var(--line);
+  flex: none;
+}
+.segmented button {
+  min-height: 26px;
+  padding: 0 7px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--ink-2);
+  font: 600 12.5px var(--font-ui);
+  cursor: pointer;
+}
+.segmented button[aria-pressed='true'] {
+  background: var(--ink);
+  color: var(--ground);
+}
+@media (pointer: coarse) {
+  .segmented button {
+    min-height: 40px;
+  }
+}
+.switch {
+  appearance: none;
+  flex: none;
+  width: 36px;
+  height: 20px;
+  margin: 0;
+  border-radius: 999px;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  position: relative;
+  cursor: pointer;
+}
+.switch::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--muted);
+  transition: transform 0.15s ease;
+}
+.switch:checked {
+  background: var(--ink);
+  border-color: var(--ink);
+}
+.switch:checked::before {
+  transform: translateX(16px);
+  background: var(--ground);
+}
+@media (pointer: coarse) {
+  .switch {
+    width: 48px;
+    height: 28px;
+  }
+  .switch::before {
+    width: 22px;
+    height: 22px;
+  }
+  .switch:checked::before {
+    transform: translateX(20px);
+  }
+}
+
+.type-grid,
+.pack-grid {
+  display: grid;
+  gap: 3px;
+}
+.type-grid .tg-head,
+.type-grid .tg-row {
+  display: grid;
+  grid-template-columns: 1fr 0.7fr 0.85fr 1.05fr 0.6fr;
+  gap: 5px;
+  align-items: center;
+}
+.pack-grid .tg-head,
+.pack-grid .tg-row {
+  display: grid;
+  grid-template-columns: 1fr 0.9fr 0.8fr 0.76fr 0.76fr;
+  gap: 5px;
+  align-items: center;
+}
+.tg-head {
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.tg-name {
+  font-weight: 600;
+  font-size: 13.5px;
+}
+.tg-row.is-whale .tg-name::after {
+  content: ' ◆';
+  color: var(--gem);
+  font-size: 11px;
+}
+.per-pull {
+  font: 400 12.5px var(--font-ui);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-2);
+  text-align: right;
+}
+
+/* Results */
+.results {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+.runbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 16px;
+  padding: 4px 2px;
+}
+.run-summary {
+  margin: 0;
+  font-family: var(--font-ui);
+  color: var(--ink-2);
+}
+.run-summary b {
+  color: var(--ink);
+  font-weight: 650;
+}
+.run-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 20px;
+  min-width: 0;
+}
+.sec-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 14px;
+  margin-bottom: 14px;
+}
+.sec-head h2 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.sec-head p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  max-width: 75ch;
+}
+.mini-head {
+  margin: 20px 0 10px;
+  font-size: 13px;
+  font-weight: 650;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.quiet {
+  color: var(--muted);
+}
+.warning {
+  margin: -6px 0 14px;
+  color: var(--off);
+  font-size: 14px;
+}
+.stale {
+  opacity: 0.55;
+  transition: opacity 0.2s;
+}
+
+/* Legend and keys */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+  margin: 0 0 16px;
+  padding: 0;
+  list-style: none;
+  font-size: 14px;
+}
+.legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.legend .count {
+  font-family: var(--font-ui);
+  color: var(--muted);
+}
+.key,
+.mini {
+  display: inline-block;
+  flex: none;
+  border-radius: 50%;
+}
+.key {
+  width: 14px;
+  height: 14px;
+}
+.key.dot,
+.mini.dot {
+  background: var(--featured);
+}
+.key.ring,
+.mini.ring {
+  border: 2.5px solid var(--lost);
+}
+.key.none {
+  width: 8px;
+  height: 8px;
+  margin: 3px;
+  background: var(--none);
+}
+.mini {
+  width: 10px;
+  height: 10px;
+  margin-right: 6px;
+  vertical-align: -1px;
+}
+.mini.ring {
+  border-width: 2px;
+}
+.mini.none {
+  width: 7px;
+  height: 7px;
+  background: var(--none);
+}
+
+/* Players */
+.players-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
+  gap: 20px;
+  align-items: start;
+}
+@media (max-width: 1240px) {
+  .players-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.field-wrap {
+  min-width: 0;
+}
+#field {
+  display: block;
+  width: 100%;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.inspector {
+  background: var(--panel-2);
+  border-radius: 16px;
+  padding: 16px;
+  min-width: 0;
+  font-size: 14px;
+}
+.insp-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+.insp-title {
+  font-size: 18px;
+  font-weight: 700;
+}
+.insp-nav {
+  display: flex;
+  gap: 6px;
+}
+.insp-nav .btn {
+  width: 36px;
+  justify-content: center;
+  padding: 0;
+  font-size: 18px;
+}
+.insp-pick {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  margin: 12px 0;
+}
+.find {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.find .num.small {
+  width: 70px;
+}
+.chip {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink-2);
+  vertical-align: 2px;
+}
+.chip.whale {
+  border-color: var(--gem);
+  color: var(--gem);
+}
+.insp-result {
+  margin: 0 0 10px;
+  color: var(--ink-2);
+}
+.insp-result b {
+  color: var(--ink);
+}
+.facts {
+  display: grid;
+  gap: 0;
+  margin: 0 0 12px;
+}
+.facts div {
+  display: grid;
+  grid-template-columns: 92px minmax(0, 1fr);
+  gap: 10px;
+  padding: 5px 0;
+  border-top: 1px solid var(--line);
+}
+.facts dt {
+  color: var(--muted);
+  font-size: 13px;
+}
+.facts dd {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.is-money {
+  color: var(--money);
+}
+.insp-chart {
+  margin: 4px 0 8px;
+}
+.days {
+  margin-top: 10px;
+}
+.days summary {
+  cursor: pointer;
+  color: var(--ink-2);
+  font-weight: 600;
+  font-size: 13.5px;
+}
+
+/* Tables */
+.table-wrap {
+  overflow-x: auto;
+  max-width: 100%;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 14px;
+}
+caption {
+  text-align: left;
+  font-size: 12px;
+  font-weight: 650;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 6px 0;
+}
+th,
+td {
+  font-variant-numeric: tabular-nums;
+  text-align: left;
+  padding: 8px 10px;
+  border-top: 1px solid var(--line);
+  vertical-align: top;
+}
+thead th {
+  border-top: 0;
+  font-size: 12px;
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+}
+tbody th {
+  font-weight: 600;
+}
+td {
+  font-family: var(--font-ui);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+tr.is-whale th::after {
+  content: ' ◆';
+  color: var(--gem);
+  font-size: 11px;
+}
+tr.total th,
+tr.total td {
+  color: var(--ink-2);
+}
+.mini-table th,
+.mini-table td {
+  padding: 5px 6px;
+  font-size: 12.5px;
+}
+.mini-table tr.quiet td {
+  color: var(--muted);
+}
+.data td.quiet {
+  color: var(--muted);
+  font-family: var(--font-ui);
+  white-space: normal;
+}
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-ui);
+  font-weight: 600;
+}
+.status svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.status.ok {
+  color: var(--ink);
+}
+.status.off {
+  color: var(--off);
+}
+
+/* Money */
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+.tile {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: var(--panel-2);
+  min-width: 0;
+}
+.tile-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+}
+.gem-icon {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: var(--gem);
+  stroke-width: 1.3;
+  stroke-linejoin: round;
+}
+/* Big standalone figures use proportional digits (even digit widths look loose at this size). Ink by
+   default; only Revenue wears the money green. */
+.tile-value {
+  font: 650 26px/1.15 var(--font-ui);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+.tile-sub {
+  display: flex;
+  flex-direction: column;
+  margin-top: 2px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+.ts-main {
+  color: var(--ink-2);
+  font-weight: 550;
+}
+.ts-detail {
+  color: var(--muted);
+}
+.split svg {
+  display: block;
+  max-width: 100%;
+}
+/* The outcome bar sits right above the legend that names its colours, so they read as one thing. */
+.outcome-split {
+  margin: 0 0 10px;
+}
+.outcome-split svg {
+  display: block;
+  max-width: 100%;
+}
+/* Each outcome's share, after its count: the count says how many, this says how many of everyone. */
+.count-share {
+  margin-left: 6px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.split-legend,
+.chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 14px;
+}
+.split-legend li,
+.chart-legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  flex: none;
+}
+.swatch.line {
+  height: 2px;
+  border-radius: 1px;
+  width: 16px;
+}
+.lg-val {
+  font-family: var(--font-ui);
+}
+.lg-share {
+  font-family: var(--font-ui);
+  color: var(--muted);
+}
+
+/* Suggestions */
+.suggest-body {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 18px;
+}
+.sg-col h3 {
+  margin: 0;
+  font-size: 16px;
+}
+.sg-col ul {
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+.suggestion {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px 12px;
+  align-items: center;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: var(--panel-2);
+}
+.sg-title {
+  grid-column: 1 / -1;
+  font-weight: 650;
+}
+.sg-effects {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 13px;
+  color: var(--ink-2);
+}
+.sg-effects b {
+  font-family: var(--font-ui);
+  font-weight: 500;
+  color: var(--ink);
+}
+.sg-k {
+  color: var(--muted);
+}
+.close-call {
+  color: var(--off);
+}
+.sg-note {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+.left-out {
+  margin-top: 12px;
+}
+
+/* Charts */
+.chart svg,
+.insp-chart svg {
+  display: block;
+  max-width: 100%;
+}
+svg .grid {
+  stroke: var(--line);
+  stroke-width: 1;
+}
+svg .axis {
+  stroke: #3a3c42;
+  stroke-width: 1;
+}
+svg .mark {
+  stroke: var(--muted);
+  stroke-width: 1;
+}
+svg .tick {
+  fill: var(--muted);
+  font: 400 11.5px var(--font-ui);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Sources */
+.sources {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 12px;
+}
+.sources li {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr);
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+@media (max-width: 560px) {
+  .sources li {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4px;
+  }
+}
+.sources p {
+  margin: 2px 0 0;
+  color: var(--ink-2);
+  font-size: 14px;
+}
+.src-kind {
+  font-size: 12px;
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.src-kind.official,
+.src-kind.wiki {
+  color: var(--ink);
+}
+
+/* Tooltip, toast */
+.tip {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 20;
+  max-width: 300px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: #09090b;
+  border: 1px solid var(--line);
+  color: var(--ink);
+  font: 400 12.5px/1.4 var(--font-ui);
+  pointer-events: none;
+}
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 20px);
+  transform: translateX(-50%);
+  z-index: 30;
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--ground);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+}
+
+/* Info buttons and their popover */
+.row-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.row-title > .info-btn {
+  margin-left: 0; /* the gap already spaces it */
+}
+@media (max-width: 560px) {
+  .pinned {
+    padding-inline: 14px;
+  }
+  .group {
+    padding-inline: 8px;
+  }
+  .group-body {
+    padding-inline: 6px;
+  }
+}
+.row-title.sub-head {
+  margin: 14px 0 4px;
+}
+.note {
+  font: 400 11.5px var(--font-ui);
+  color: var(--muted);
+}
+/* A short line about where a preset's numbers come from: under the banner readout, atop the store. */
+.sec-note {
+  display: block;
+  margin: 6px 2px 0;
+  line-height: 1.4;
+}
+.store-note {
+  margin: 0 0 4px;
+}
+.gem-none {
+  margin: 4px 0 0;
+  font-size: 12.5px;
+}
+.info-btn {
+  position: relative;
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  margin: 0 0 0 6px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid #44474e;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  vertical-align: middle;
+}
+.info-btn svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+}
+.info-btn svg path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+}
+.info-btn::after {
+  content: '';
+  position: absolute;
+  inset: -9px;
+}
+.info-btn:hover,
+.info-btn[aria-expanded='true'] {
+  color: var(--ink);
+  border-color: var(--ink-2);
+}
+.info-pop {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 25;
+  max-width: min(320px, calc(100vw - 24px));
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: #09090b;
+  border: 1px solid var(--line);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  color: var(--ink-2);
+  font: 400 13.5px/1.5 var(--font-ui);
+}
+.tg-head span {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Player card */
+.insp-empty {
+  margin: 4px 0 12px;
+  color: var(--muted);
+}
+.insp-result {
+  margin: 12px 0 12px;
+}
+.insp-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+.insp-stats div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--panel);
+  min-width: 0;
+}
+.insp-stats .v {
+  font: 650 19px/1.2 var(--font-ui);
+  white-space: nowrap;
+}
+.inspector {
+  container-type: inline-size;
+}
+@container (max-width: 330px) {
+  .insp-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .insp-stats div:first-child {
+    grid-column: 1 / -1;
+  }
+}
+.insp-stats .l,
+.insp-gems .l {
+  font-size: 12.5px;
+  color: var(--muted);
+}
+.insp-gems {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 14px;
+}
+.gem-bar {
+  display: flex;
+  gap: 2px;
+  height: 12px;
+}
+.gem-bar span {
+  display: block;
+  height: 100%;
+  min-width: 3px;
+}
+.gem-bar span:first-child {
+  border-radius: 4px 0 0 4px;
+}
+.gem-bar span:last-child {
+  border-radius: 0 4px 4px 0;
+}
+.gem-bar span:only-child {
+  border-radius: 4px;
+}
+.gem-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font: 400 12.5px var(--font-ui);
+  color: var(--ink-2);
+}
+.gem-legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.lab-trace {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--line);
+}
+.lab-tag {
+  margin: 0 0 8px;
+  font-size: 11.5px;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--off);
+}
+.close-call {
+  display: inline-flex;
+  align-items: center;
+  font-weight: 600;
+}
+.left-out {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 12px 0 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+.sg-col h3 {
+  display: flex;
+  align-items: center;
+}
+.sg-title {
+  display: flex;
+  align-items: center;
+}
+
+/* Money on top, compact */
+.money {
+  padding: 14px 18px;
+  container: money / inline-size;
+}
+@container money (max-width: 720px) {
+  .tiles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.money-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 12px;
+  margin-bottom: 10px;
+}
+.money-head h2,
+.ph-left h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+}
+.money-head p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+.money .split {
+  margin-top: 10px;
+}
+.money .split-legend {
+  margin-top: 6px;
+  font-size: 13px;
+}
+.split-legend .lg-total {
+  display: block; /* plain text flow, so the comma sits right after the amount */
+  margin-left: auto;
+  color: var(--ink-2);
+}
+.lg-total b {
+  font-size: 14px;
+  font-weight: 650;
+  color: var(--money);
+}
+.tile-label .swatch {
+  width: 10px;
+  height: 10px;
+}
+
+/* Players: title, the season summary and its controls on one line */
+.players {
+  padding: 14px 18px 16px;
+}
+.players-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  margin-bottom: 8px;
+}
+.ph-left {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+  min-width: 0;
+}
+.ph-left .run-summary {
+  font-size: 13.5px;
+}
+.run-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+/* The colour key: a framed row that hugs its items, so it reads as the key to the dots below. */
+.legend {
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 0 10px;
+  padding: 6px 14px;
+  gap: 6px 20px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--panel-2);
+  font-size: 13.5px;
+}
+.legend-lead {
+  color: var(--muted);
+  font-weight: 600;
+}
+/* When the field draws one dot per N players, that is not small print: every dot on screen means something
+   different, so it is said at full size, in ink, in a chip that separates it from the colour key beside it. */
+.legend-lead.is-thinned {
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--ground);
+  border: 1px solid var(--line);
+}
+/* A big sample blocks the page for a few seconds while it plays out. The cursor and a dimmed Players panel say so
+   before the work starts; `changed` sets this, and the wait before the run gives the browser a frame to paint it. */
+body.is-working {
+  cursor: progress;
+}
+body.is-working #players {
+  opacity: 0.55;
+  transition: opacity 120ms ease-out;
+}
+body.is-working #players::after {
+  content: 'Playing the season\2026';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: var(--ground);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  font: 700 15px var(--font-ui);
+}
+#players {
+  position: relative;
+}
+.legend-lead.is-thinned b {
+  color: var(--gem);
+  font-weight: 700;
+}
+
+/* Block labels laid over the dot field */
+.field-wrap {
+  position: relative;
+}
+.field-labels {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.field-label {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.field-label .info-btn {
+  pointer-events: auto;
+  margin-left: -2px;
+}
+.field-label .info-btn::after {
+  inset: -4px; /* stays clear of the first row of dots */
+}
+.fl-name {
+  font-weight: 650;
+  font-size: 14px;
+}
+.fl-count {
+  font: 400 12.5px var(--font-ui);
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.fl-money {
+  margin-left: auto;
+  font: 600 12.5px var(--font-ui);
+  color: var(--money);
+}
+/* phones: "20 of 10,000 · 0.2%", so the share and the revenue both fit */
+@media (max-width: 480px) {
+  .fl-players {
+    display: none;
+  }
+}
+
+/* One screen on desktops: money on top, the dots and the player card fill the rest. The script sets
+   body.fit (wide and tall enough, and not #lab, whose extra sections need the page to scroll). */
+body.fit .app {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding-block: 12px;
+}
+body.fit .top {
+  flex: none;
+  padding-block: 0 10px;
+}
+body.fit .layout {
+  flex: 1;
+  min-height: 0;
+  grid-template-rows: minmax(0, 1fr);
+  align-items: stretch;
+}
+body.fit .settings {
+  position: static;
+  max-height: none;
+  height: 100%;
+  overflow-y: auto;
+}
+body.fit .results {
+  height: 100%;
+  min-height: 0;
+  gap: 12px;
+}
+body.fit #money {
+  flex: none;
+}
+body.fit #players {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+body.fit .players-body {
+  flex: 1;
+  min-height: 0;
+  grid-template-rows: minmax(0, 1fr);
+}
+body.fit .field-wrap {
+  height: 100%;
+  min-height: 0;
+  overflow: hidden auto;
+  scrollbar-width: thin;
+}
+body.fit .inspector {
+  max-height: 100%;
+  overflow-y: auto;
+}
+
+/* Vocabulary: a dialog of one-line definitions, two columns on wide screens */
+.vocab {
+  width: min(780px, calc(100vw - 32px));
+  max-height: min(84vh, 820px);
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--panel);
+  color: var(--ink);
+  overflow: hidden;
+}
+.vocab[open] {
+  display: flex;
+  flex-direction: column;
+}
+.vocab::backdrop {
+  background: rgba(5, 6, 8, 0.72);
+}
+.vocab-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 20px 10px;
+  border-bottom: 1px solid var(--line);
+}
+.vocab-head h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+}
+.vocab-body {
+  overflow-y: auto;
+  padding: 4px 20px 20px;
+  scrollbar-width: thin;
+}
+/* Section headers stand apart from the terms: the sidebar's icon chip for the same topic, the name in ink and
+   larger than a term, and a line above each section after the first. */
+.vocab-body h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 22px 0 12px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.vocab-body h3:first-child {
+  margin-top: 14px;
+  padding-top: 0;
+  border-top: 0;
+}
+.vocab-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 28px;
+  margin: 0;
+}
+.vocab-list dt {
+  font-weight: 650;
+  font-size: 14px;
+}
+.vocab-list dd {
+  margin: 2px 0 0;
+  color: var(--ink-2);
+  font-size: 13.5px;
+  line-height: 1.45;
+}
+@media (max-width: 640px) {
+  .vocab-list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* A suggestion's assumption, shown under its title rather than hidden behind an (i). */
+.sg-note {
+  margin: 2px 0 0;
+  font: 400 12px/1.4 var(--font-ui);
+  color: var(--muted);
+}
+
+/* Short desktop screens (1280 × 720): rows, section headers and the readout sit a little tighter, so the open
+   Banner rules section, its readout and the game's note fit with "Gems and store" still in view. */
+@media (min-width: 1001px) and (max-height: 760px) and (pointer: fine) {
+  .pinned {
+    padding: 8px 16px 6px;
+  }
+  .row {
+    min-height: 30px;
+    padding-block: 1px;
+  }
+  .row.stack {
+    padding-block: 2px 4px;
+  }
+  .group > summary {
+    padding-block: 8px;
+  }
+  .readout {
+    margin-top: 4px;
+    padding: 6px 8px;
+  }
+  .sec-note {
+    margin-top: 4px;
+  }
+}
+
+/* ---------------------------------------------------------------------------------------------
+   The money bar (tablets and phones, 18 Oct 2026)
+
+   One column means the settings sit above the results, so every figure leaves the screen the moment a
+   section opens. This bar keeps the season's money, how the players did and what the last change did to
+   revenue floating at the bottom edge while you work the settings, and gets out of the way the moment the
+   real Money card is on screen (app.js watches it). Desktop keeps the side-by-side layout and never shows it. */
+.hud {
+  position: fixed;
+  left: 10px;
+  right: 10px;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 10px);
+  z-index: 18; /* under the tooltip, the (i) popover and the toast */
+  display: flex;
+  flex-direction: column; /* the panel opens upward, above the bar */
+  pointer-events: none;
+}
+.hud[hidden] {
+  display: none;
+}
+/* On a wide tablet it reads better as a floating pill than as a dock with a long empty middle. */
+@media (min-width: 700px) {
+  .hud {
+    left: 50%;
+    right: auto;
+    width: min(680px, calc(100% - 32px));
+    transform: translateX(-50%);
+  }
+}
+/* Phones and one-column tablets, plus a touch tablet held landscape (an iPad Pro is 1366 wide but still a
+   tablet). A desktop with a mouse keeps the two columns and never sees it. */
+@media (min-width: 1001px) and (pointer: fine) {
+  .hud {
+    display: none !important;
+  }
+}
+@media (min-width: 1367px) {
+  .hud {
+    display: none !important;
+  }
+}
+.hud > * {
+  pointer-events: auto;
+}
+.hud-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 7px 7px 8px 13px;
+  border: 1px solid var(--line-2);
+  border-radius: 16px;
+  /* Solid, not frosted: at this size a figure behind the bar reads straight through a translucent one, and
+     the figure behind is usually the Money card's own. */
+  background: #1b1c20;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
+  color: var(--ink);
+  font: 400 13px var(--font-ui);
+  text-align: left;
+  cursor: pointer;
+}
+.hud-fig {
+  display: flex;
+  flex-direction: column;
+  flex: none;
+  line-height: 1.1;
+}
+.hud-rev {
+  font: 650 21px/1.1 var(--font-ui);
+  letter-spacing: -0.01em;
+  color: var(--money);
+  white-space: nowrap;
+}
+.hud-cap {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+/* What the last change did to revenue, in words: an arrow alone did not say what it meant. Money stays green
+   whichever way it moved, so the colour still means one thing and the sign carries the direction. */
+.hud-delta {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: none;
+  padding: 3px 9px;
+  border-radius: 10px;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  line-height: 1.15;
+  white-space: nowrap;
+}
+.hud-delta b {
+  font: 650 13.5px var(--font-ui);
+  color: var(--money);
+}
+.hud-delta span {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--muted);
+}
+.hud-delta[hidden] {
+  display: none;
+}
+/* The outcomes take the row under the money: with a word each they will not share a line with a six-figure
+   revenue and the chip, and the words are the point. */
+.hud-dots {
+  order: 2;
+  flex-basis: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 14px;
+  min-width: 0;
+  margin-top: 2px;
+  padding-top: 7px;
+  border-top: 1px solid var(--line);
+  font-size: 12.5px;
+}
+.hud-dots > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+.hud-dots b {
+  font-weight: 650;
+  color: var(--ink);
+}
+.hd-word {
+  font-weight: 500;
+  color: var(--muted);
+}
+.hud-chev {
+  order: 1; /* stays on the money row, at its right edge, with the outcomes wrapping below */
+  flex: none;
+  width: 32px;
+  height: 32px;
+  margin-left: auto;
+  border-radius: 9px;
+  border: 1px solid var(--line-2);
+  background: var(--ground) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Cpath d='M11 18l5-5 5 5' fill='none' stroke='%23f6f8fc' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center;
+  transition: transform 0.15s ease;
+}
+.hud-bar[aria-expanded='true'] .hud-chev {
+  transform: rotate(180deg);
+}
+
+
+.hud-panel {
+  padding: 12px 14px;
+  border: 1px solid var(--line-2);
+  border-radius: 16px;
+  background: #1b1c20;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
+}
+.hud-panel[hidden] {
+  display: none;
+}
+/* Open, the panel and the bar are one surface. A gap between them shows a strip of the page, and that strip is
+   usually the Money card printing the same figures over again. */
+.hud-panel:not([hidden]) {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom: 0;
+  padding-bottom: 10px;
+}
+.hud-panel:not([hidden]) + .hud-bar {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+.hud-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 14px;
+}
+@media (min-width: 620px) {
+  .hud-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+.hud-cell {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.hud-cell .hc-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+}
+.hud-cell .hc-value {
+  font: 650 18px/1.2 var(--font-ui);
+  white-space: nowrap;
+}
+.hud-cell .hc-value.is-money {
+  color: var(--money);
+}
+/* Room to scroll past the bar: it only shows once the Money card has left the screen, and the page can still
+   be at its very bottom then. */
+body.hud-on {
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 104px);
+}

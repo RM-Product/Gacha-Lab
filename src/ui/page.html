@@ -1,0 +1,166 @@
+<title>Gacha Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&display=swap">
+<style>
+/*__CSS__*/
+</style>
+<div class="app">
+  <header class="top">
+    <div class="brand">
+      <span class="mark" id="mark" aria-hidden="true"></span>
+      <div class="brand-text">
+        <span class="name">Gacha Lab</span>
+        <span class="tagline">A gacha economy simulator: test your banners on pretend players before real ones.</span>
+      </div>
+    </div>
+    <div class="top-actions">
+      <button type="button" id="vocab-open" class="btn" aria-haspopup="dialog">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 4.2C6.9 3.3 5.3 3 3 3v9.4c2.3 0 3.9.3 5 1.2 1.1-.9 2.7-1.2 5-1.2V3c-2.3 0-3.9.3-5 1.2zM8 4.2v9.4"></path></svg>
+        Vocabulary
+      </button>
+      <button type="button" id="save-image" class="btn">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2.5" y="3" width="11" height="10" rx="2"></rect><path d="M2.8 11.2l3.2-3.2 2.6 2.6 1.6-1.6 3 3"></path></svg>
+        Save post image
+      </button>
+      <button type="button" id="save-csv" class="btn">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2.5v7.5M4.8 7l3.2 3.2L11.2 7M3 12.8h10"></path></svg>
+        Download players
+      </button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside id="settings" class="settings" aria-label="Settings"></aside>
+
+    <main class="results">
+      <p id="live" class="visually-hidden" aria-live="polite"></p>
+
+      <section id="money" class="card money" aria-labelledby="money-title">
+        <div class="money-head">
+          <h2 id="money-title">Money</h2>
+          <p id="money-note"></p>
+        </div>
+        <div id="tiles" class="tiles"></div>
+        <div id="split" class="split"></div>
+        <p id="top-tenth" class="note sec-note"></p>
+      </section>
+
+      <section id="players" class="card players" aria-labelledby="players-title">
+        <div class="players-head">
+          <div class="ph-left">
+            <h2 id="players-title">Players</h2>
+            <p id="run-summary" class="run-summary"></p>
+          </div>
+          <div class="run-actions">
+            <button type="button" id="play" class="btn primary small">Play the season</button>
+            <button type="button" id="reroll" class="btn small">New dice</button>
+          </div>
+        </div>
+        <div id="outcome-split" class="split outcome-split"></div>
+        <ul class="legend">
+          <li class="legend-lead" id="legend-lead">Each dot is one player:</li>
+          <li><span class="key dot" aria-hidden="true"></span>Got the featured legendary <span class="count" id="count-featured"></span><span class="count-share" id="share-featured"></span></li>
+          <li><span class="key ring" aria-hidden="true"></span>Got a legendary, but lost the 50/50 <span class="count" id="count-off"></span><span class="count-share" id="share-off"></span></li>
+          <li><span class="key none" aria-hidden="true"></span>No legendary <span class="count" id="count-none"></span><span class="count-share" id="share-none"></span></li>
+        </ul>
+        <p id="share-warning" class="warning" hidden>The player type shares add up to more than 100%, so they were scaled down to fit the sample. The blocks show the counts actually used.</p>
+        <div class="players-body">
+          <div class="field-wrap"><canvas id="field" role="img" aria-label="Players"></canvas></div>
+          <div id="inspector" class="inspector"></div>
+        </div>
+      </section>
+
+      <section id="outcomes" class="card" aria-labelledby="outcomes-title" data-lab hidden>
+        <div class="sec-head"><h2 id="outcomes-title">Results by player type</h2></div>
+        <div class="table-wrap"><table id="outcome-table" class="data"></table></div>
+      </section>
+
+      <section id="suggestions" class="card" aria-labelledby="suggest-title" data-lab hidden>
+        <div class="sec-head">
+          <h2 id="suggest-title">Smart suggestions</h2>
+        </div>
+        <div id="suggest-body" class="suggest-body"></div>
+      </section>
+
+      <section id="math" class="card" aria-labelledby="math-title" data-lab hidden>
+        <div class="sec-head">
+          <h2 id="math-title">Math check</h2>
+          <p id="math-note"></p>
+        </div>
+        <div class="table-wrap"><table id="math-table" class="data"></table></div>
+        <h3 class="mini-head">Where the legendaries landed</h3>
+        <div id="pity-chart" class="chart"></div>
+      </section>
+
+      <section id="sources" class="card" aria-labelledby="sources-title" data-lab hidden>
+        <div class="sec-head">
+          <h2 id="sources-title">Where the numbers come from</h2>
+          <p>The banner rules come from each publisher's rates (or wikis that copy the in-game text) and from large sets of real pulls players have recorded. The player mix comes from HoYoverse's 2017 IPO filing and industry studies (whales 0.2% of players, dolphins 1.1%, pass buyers 8%), and log-ins from market data on daily and monthly players. Games vary, so treat it as a starting point to change.</p>
+        </div>
+        <div id="sources-body"></div>
+      </section>
+    </main>
+  </div>
+
+</div>
+<dialog id="vocab" class="vocab" aria-labelledby="vocab-title">
+  <div class="vocab-head">
+    <h2 id="vocab-title">Vocabulary</h2>
+    <button type="button" id="vocab-close" class="btn small" aria-label="Close vocabulary">✕</button>
+  </div>
+  <div class="vocab-body">
+    <h3><span class="g-icon star" data-icon="star"></span>Pulling</h3>
+    <dl class="vocab-list">
+      <div><dt>Banner</dt><dd>A limited-time event built around a featured legendary with boosted odds. Players pull on it to try to get it.</dd></div>
+      <div><dt>Pull</dt><dd data-public>One try on a banner, paid for with gems. Games call it a wish (Genshin Impact), a drop (Honkai Impact 3rd), a warp (Honkai: Star Rail) or a signal search (Zenless Zone Zero); League of Legends calls it a draw.</dd><dd data-lab hidden>One try on a banner, paid for with gems. Games call it a wish (Genshin Impact, Love and Deepspace), a drop (Honkai Impact 3rd), research (Punishing: Gray Raven), warp (Honkai: Star Rail), signal search (Zenless Zone Zero), convene (Wuthering Waves), headhunt (Arknights), summon (Fate/Grand Order, Epic Seven, Fire Emblem Heroes, Reverse: 1999), recruit (Blue Archive, NIKKE) or scout (Umamusume); League of Legends calls it a draw, Apex Legends opening a pack and Diablo Immortal using a crest.</dd></div>
+      <div><dt>Legendary</dt><dd data-public>The rarest prize. Gacha games call it 5★ or S-rank; League of Legends has Exalted skins and Mythic Variants, and its own "Legendary" tier below them.</dd><dd data-lab hidden>The rarest prize. Gacha games call it 5★ (some 6★, 3★, SSR or S-rank); League of Legends has Exalted skins and Mythic Variants, Apex Legends heirlooms and Diablo Immortal 5★ legendary gems. Apex and League each have their own "Legendary" tier below this.</dd></div>
+      <div><dt>Featured legendary</dt><dd>The legendary the banner is built around, also called the rate-up.</dd></div>
+      <div><dt>50/50</dt><dd>The chance a legendary is the featured legendary rather than a different one, often 50%.</dd></div>
+      <div><dt>Guarantee</dt><dd>After a lost 50/50, the next legendary is always the featured legendary.</dd></div>
+      <div><dt>Capturing Radiance</dt><dd>Genshin Impact's rule that turns some lost 50/50s into wins, lifting its 50/50 to 55%.</dd></div>
+      <div><dt>Pity</dt><dd>The rule that raises the odds the longer a player goes without a legendary.</dd></div>
+      <div><dt>Soft pity</dt><dd>The pull where the legendary chance starts climbing.</dd></div>
+      <div><dt>Hard pity</dt><dd>The pull where a legendary is certain.</dd></div>
+      <div data-lab hidden><dt>Spark</dt><dd>In some games, a set number of pulls a player can trade for the featured legendary.</dd></div>
+      <div data-lab hidden><dt>Free copies</dt><dd>Some games hand out the featured legendary at set pull counts, once each: Epic Seven at 170 and 200 summons, Fire Emblem Heroes at 40, Arknights at 300.</dd></div>
+      <div><dt>Copies</dt><dd>How many of the same prize a player owns. In most gacha games each extra copy makes it stronger.</dd></div>
+    </dl>
+    <h3><span class="g-icon gem" data-icon="gem"></span>Money</h3>
+    <dl class="vocab-list">
+      <div><dt>Gems</dt><dd data-public>The premium currency players buy with real money or earn by playing, and spend on pulls. Each game names its own: Primogems (Genshin Impact), Stellar Jade (Honkai: Star Rail), Polychromes (Zenless Zone Zero), Crystals (Honkai Impact 3rd) and RP (League of Legends).</dd><dd data-lab hidden>The premium currency players buy with real money or earn by playing, and spend on pulls. Each game names its own: Primogems (Genshin Impact), Stellar Jade (Honkai: Star Rail), Polychromes (Zenless Zone Zero), Astrite (Wuthering Waves), Orundum (Arknights), Saint Quartz (Fate/Grand Order), Pyroxene (Blue Archive), Carats (Umamusume), Gems (NIKKE), Clear Drops (Reverse: 1999), Skystones (Epic Seven), Orbs (Fire Emblem Heroes), Crystals (Honkai Impact 3rd), Black Cards (Punishing: Gray Raven), Diamonds (Love and Deepspace), RP (League of Legends), Apex Coins (Apex Legends) and Eternal Orbs (Diablo Immortal).</dd></div>
+      <div><dt>Free gems</dt><dd>Gems players earn by playing, from daily tasks and events.</dd></div>
+      <div><dt>Gem packs</dt><dd>Bundles of gems sold for real money, often with bonus gems on top. Bigger packs usually give more gems per dollar.</dd></div>
+      <div><dt>Monthly pass</dt><dd>A small purchase that gives gems up front, then more on each day the player logs in while it lasts.</dd></div>
+      <div><dt>Revenue</dt><dd>The real money players spent this season.</dd></div>
+    </dl>
+    <h3><span class="g-icon people" data-icon="people"></span>Players</h3>
+    <dl class="vocab-list">
+      <div><dt>Whales</dt><dd>The biggest spenders, a tiny share of players.</dd></div>
+      <div><dt>Dolphins</dt><dd>Mid-size spenders: they pay, but far less than whales.</dd></div>
+      <div><dt>Pass buyers</dt><dd>Players who only buy the monthly pass.</dd></div>
+      <div><dt>Free players</dt><dd>Players who never pay.</dd></div>
+      <div><dt>Season</dt><dd>The days the simulation runs, 30 by default.</dd></div>
+    </dl>
+  </div>
+</dialog>
+<!-- Tablets and phones only: the season's money and how the players did, floating at the bottom edge while
+     the settings are open. app.js fills it and shows it only while the Money card is off screen. -->
+<div id="hud" class="hud" hidden>
+  <div id="hud-panel" class="hud-panel" hidden></div>
+  <button type="button" id="hud-toggle" class="hud-bar" aria-expanded="false" aria-controls="hud-panel" aria-label="Show the money and player totals">
+    <span class="hud-fig" aria-hidden="true">
+      <span class="hud-rev" id="hud-rev"></span>
+      <span class="hud-cap">revenue</span>
+    </span>
+    <span class="hud-delta" id="hud-delta" aria-hidden="true" hidden></span>
+    <span class="hud-dots" id="hud-dots" aria-hidden="true"></span>
+    <span class="hud-chev" aria-hidden="true"></span>
+  </button>
+</div>
+<div id="tip" class="tip" hidden></div>
+<div id="info-pop" class="info-pop" role="status" aria-live="polite" hidden></div>
+<div id="toast" class="toast" role="status" hidden></div>
+<script>
+/*__JS__*/
+</script>

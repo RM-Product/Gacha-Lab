@@ -1,0 +1,13 @@
+{
+  "name": "gacha-lab",
+  "version": "0.1.0",
+  "description": "Gacha economy simulator: set the banner rules, the store and the player mix, then watch pretend players play a season.",
+  "type": "module",
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "test": "node --test \"test/*.test.js\"",
+    "validate": "node scripts/validate.js",
+    "build": "node scripts/build.js"
+  }
+}
