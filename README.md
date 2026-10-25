@@ -8,6 +8,10 @@ and where the revenue comes from.
 
 **Live: [thegachalab.pages.dev](https://thegachalab.pages.dev)**
 
+[![tests](https://github.com/RM-Product/Gacha-Lab/actions/workflows/test.yml/badge.svg)](https://github.com/RM-Product/Gacha-Lab/actions/workflows/test.yml)
+
+![Gacha Lab: settings on the left, a season's money and players on the right](docs/img/overview.png)
+
 ## What it models
 
 A season, one pull at a time, for a whole sample of players:
@@ -28,12 +32,17 @@ A simulator that can't be wrong is just an opinion with charts. This one is meas
 probability, not against itself:
 
 ```sh
-npm run validate     # a million 5-star pulls per rule set, measured against the exact maths
+npm run validate     # pulls each rule set until it has given a million 5-stars, then checks the maths
 ```
 
-The run writes `docs/VALIDATION.md`: what the long pull test measured, what the exact maths says, and
-what the publisher publishes, side by side. `src/mathcheck.js` holds those rows, and the same comparison
-is shown in the page under `#lab`. Runs are seeded in `src/rng.js`, so any number on screen is reproducible.
+![The maths check: this test, the exact maths, and the publisher's published rate, side by side](docs/img/math-check.png)
+
+The run writes `docs/VALIDATION.md`: for each of the 24 rule sets, what the test measured, what the exact
+maths says, and what the publisher published, side by side. A result counts as a match only if it sits
+within four standard errors of the exact value, and where each 5-star landed is tested by chi-square
+goodness of fit against the exact distribution, not eyeballed off a chart. `src/mathcheck.js` holds those
+rows, the same comparison appears in the page under `#lab`, and runs are seeded in `src/rng.js`, so any
+number on screen can be reproduced exactly.
 
 ## How it's built
 
@@ -53,10 +62,19 @@ single page.
 
 ```sh
 npm test             # 97 tests, node:test, no dependencies
-npm run validate     # the maths check
+npm run validate     # the maths check, about 5 seconds
 npm run build        # dist/index.html
 cd dist && python3 -m http.server 4610 --bind 127.0.0.1
 ```
+
+## What it does not model
+
+From `docs/MODEL.md`, where the assumptions are written down rather than buried: players quitting, several
+banners in one season, 4-star units, weapons, first-purchase double gems, sales, and limited pack deals.
+The player mix comes from one publisher's IPO filing and industry studies, so it is a starting point to
+change, not a universal truth. 13 of the 23 presets are marked `labOnly` until someone who plays that game
+has checked them, and the page says which. A season's revenue cannot be checked against a real banner's
+takings, and the model does not claim otherwise.
 
 ## What isn't here
 

@@ -1,0 +1,21 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Tests
+        run: npm test
+      - name: Maths check against closed-form probability
+        run: npm run validate
+      - name: Build the page
+        run: npm run build
