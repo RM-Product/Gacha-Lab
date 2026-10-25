@@ -12,7 +12,7 @@ Every number carries a confidence tag:
 | **OFFICIAL-GOV** | A US government filing (FTC complaint/press release). These are allegations in a settled case, not HoYoverse's words. |
 | **COMMUNITY-DATA** | Measured from large pull datasets or reverse engineering: GGanalysis/OneBST, paimon.moe. For topic 7 it also covers industry telemetry (Swrve, GameAnalytics) and peer-reviewed studies. |
 | **ESTIMATE** | Journalists, guide sites, calculators, top-up-shop blogs, self-selected surveys, opinion. |
-| **DERIVED** | My own arithmetic on cited inputs. It is not a new source. Scripts and raw data are in `scratchpad/lootlab/src/` (`models.py`, `cr_models.py`, `analyze_paimon.py`, `gga_run.py`, `paimon/*.json`, `gacha_info/*.json`). |
+| **DERIVED** | My own arithmetic on cited inputs. It is not a new source. The scripts and the raw data behind it are not published. |
 
 Access notes:
 - The Fandom wikis, Prydwen, Icy Veins, Game8 and Sportskeeda block automated fetches (HTTP 402/403/405).

@@ -11,7 +11,7 @@ Researched 5 Oct 2026 (UTC). Covers Wuthering Waves, Arknights, Fate/Grand Order
 | **OFFICIAL via repost** | Official patch notes or banner text copied verbatim by a third-party site. |
 | **COMMUNITY-DATA** | Large pull datasets, data mining (including verbatim client strings), reverse engineering (GGanalysis). |
 | **ESTIMATE** | Guides, press, calculators, opinion. |
-| **DERIVED** | My arithmetic on cited inputs. Not a new source. Scripts and raw data: `scratchpad/lootlab/src2/` (`analyze_wuwatracker.py`, `wuwatracker_analysis.txt`, `derived.py`, `derived_out.txt`, `gga/`, `ak_data/`, `ba/`, `uma/`, `fgo/`, `gbf/`, `r1999/`, `verify/`). |
+| **DERIVED** | My arithmetic on cited inputs. Not a new source. The scripts and the raw data behind it are not published. |
 
 Access notes:
 - Fandom wikis and bluearchive.wiki were read through their MediaWiki API (`api.php?action=parse`), so wiki quotes come from the raw wikitext. Templates are shown as their plain-text output: `{{ItemCard|Pyroxene|quantity=120}}` is quoted as "120 Pyroxene".
