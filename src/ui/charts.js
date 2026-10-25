@@ -17,7 +17,7 @@ function niceStep(max, ticks = 4) {
 // One stacked bar: revenue by paying player type, biggest spenders first, with a legend underneath
 // that names each part and gives its dollars and share.
 // How the season ended for everyone, as one bar: got the featured legendary, got one but lost the 50/50, got none.
-// The counts alone made the three hard to weigh against each other (her call, 19 Oct 2026), so they are drawn in
+// The counts alone made the three hard to weigh against each other (19 Oct 2026), so they are drawn in
 // proportion, in the field's own colours, and each carries its share as well as its count. Shares are rounded
 // together (sharesOf), so they add to 100 and agree with the labels on the field.
 export function outcomeSplit(el, counts, total, colors) {
@@ -88,7 +88,7 @@ export function revenueSplit(el, totals, colors) {
     })
     .join('');
   // The key names each colour with its share (whale and dolphin dollars are in the tiles above); then everyone who
-  // paid, added up in one green figure (her call, 7 Oct 2026; it was whales + dolphins only): the whole revenue, gem
+  // paid, added up in one green figure (7 Oct 2026; it was whales + dolphins only): the whole revenue, gem
   // packs and monthly passes alike. It adds the parts as shown, so it matches the Revenue tile. A type that paid
   // nothing has no part, no key entry and no place in the total's name.
   const players = totals.byType.reduce((a, t) => a + t.players, 0);

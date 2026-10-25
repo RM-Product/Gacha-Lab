@@ -294,7 +294,7 @@ const ICONS = {
 };
 
 // A sidebar section that folds. Each one stays as the reader left it: opening Gems and store no longer shuts
-// Banner rules (her call, 18 Oct 2026, replacing the one-at-a-time rule of the 5 Oct sidebar pass, which kept the
+// Banner rules (18 Oct 2026, replacing the one-at-a-time rule of the 5 Oct sidebar pass, which kept the
 // panel about a screen tall). A folded section shows a one-line summary of its settings.
 function section({ title, icon, summary, open = false }, ...body) {
   const sum = h('span', { class: 'g-sum' });
@@ -344,8 +344,8 @@ function listAnd(items) {
 
 // How often the hard pity is the pull that actually delivers the legendary, from the exact maths. Where soft pity
 // climbs steeply the hard pity is a formality: on HoYoverse's rules the chance has reached 96.6% by pull 89, so
-// 0.0000% of legendaries land on pull 90 and moving it changes nothing at all (her question, 19 Oct 2026: why does
-// soft pity move revenue and hard pity not?). It starts to bite only when it comes down into the ramp: at pull 85
+// 0.0000% of legendaries land on pull 90 and moving it changes nothing at all (19 Oct 2026, on why soft
+// pity moves revenue and hard pity does not). It starts to bite only when it comes down into the ramp: at pull 85
 // it settles 0.25% of legendaries, at 83 1.9%, at 80 14%, at 75 60%.
 function hardPityShare() {
   const r = S().rules;
@@ -408,7 +408,7 @@ function buildSettings() {
             class: 'reset-link',
             'aria-label': 'Reset all settings to the defaults',
             onclick: () => {
-              // Asking first (her call, 19 Oct 2026): this throws away every banner rule, store price and player
+              // Asking first (19 Oct 2026): this throws away every banner rule, store price and player
               // share the visitor has set, and there is no undo.
               if (!window.confirm(RESET_CONFIRM)) return;
               state.settings = structuredClone(DEFAULT_SETTINGS);
@@ -1001,8 +1001,8 @@ function renderMoney() {
   // (Fate/Grand Order) to 600 (Arknights).
   const freePulls = totals.freeGems / ctx.N / ctx.s.pullCost;
   const freeCost = state.freeCost;
-  // Revenue is one whole number: everything players paid, gem packs and monthly passes added together (her call,
-  // 7 Oct 2026). The words under it say what's in it; separate amounts for packs and passes read as extra income, so
+  // Revenue is one whole number: everything players paid, gem packs and monthly passes added together
+  // (7 Oct 2026). The words under it say what's in it; separate amounts for packs and passes read as extra income, so
   // none are shown. The average a payer spent is in its (i).
   const tiles = [
     {
@@ -1019,7 +1019,7 @@ function renderMoney() {
       ? { label: 'Free gems given away', value: 'None', main: 'no free gems in this game', detail: 'free players never pull', gem: true }
       : {
           label: 'Free gems given away',
-          // The money figure is what the giveaway COSTS, not what the gems would sell for (her call, 18 Oct 2026).
+          // The money figure is what the giveaway COSTS, not what the gems would sell for (18 Oct 2026).
           // It is a difference between two seasons, so on a small sample a lot of it can be luck: with only about
           // 13 payers in 1,000, two whales crossing a pack boundary move it by $200. When two standard errors
           // would reach zero, the tile says so instead of letting a precise-looking figure stand.
@@ -1115,7 +1115,7 @@ function renderPackShares() {
 }
 
 // The three outcomes, written the same way wherever they are shown: at the end of a season and on every day of a
-// replay. Counts alone made them hard to weigh against each other (her call, 19 Oct 2026), so each now carries its
+// replay. Counts alone made them hard to weigh against each other (19 Oct 2026), so each now carries its
 // share and the bar above draws them in proportion. `counts` is indexed the way dotState is: 0 none, 1 featured,
 // 2 a legendary that lost the 50/50.
 function paintCounts(counts) {
@@ -1304,7 +1304,7 @@ function labTrace(trace) {
 
 // What whales and dolphins are, for the (i) on their money tiles: one line with who they are, their share, the
 // copies they want and the most they'd spend, then the source in a few words (only while the numbers are the
-// defaults). Kept short at her call (7 Oct 2026); the full reasoning is in docs/MODEL.md.
+// defaults). Kept short (7 Oct 2026); the full reasoning is in docs/MODEL.md.
 function spenderAbout(name) {
   const d = S().types[name];
   const share = `${parseFloat((d.share * 100).toFixed(2))}%`;
@@ -1497,7 +1497,7 @@ function renderHud(tiles, revenueCents, n) {
   const moved = lastRevenue && lastRevenue.n === n ? revenueCents - lastRevenue.cents : 0;
   // Under a dollar either way is rounding, not a change worth a chip.
   delta.hidden = Math.abs(moved) < 100;
-  // An arrow on its own did not say what it meant (her question, 18 Oct 2026), so the chip says it: the sign
+  // An arrow on its own did not say what it meant (18 Oct 2026), so the chip says it: the sign
   // carries the direction and the words carry the rest.
   if (!delta.hidden) {
     const amount = `${moved > 0 ? '+' : '−'}${usd(Math.abs(moved), { compact: true, wholeDollars: true })}`;
@@ -1614,26 +1614,7 @@ function playSeason() {
 // ---------------------------------------------------------------------------------------------
 // Files: the post image and the players CSV
 
-// The parts wrapped in preview-only marker comments exist only for the private claude.ai preview; the public build
-// (scripts/build-public.js) leaves them out.
-/* preview-only */
-let downloads = null;
-const inViewer = typeof window.claude?.use === 'function';
-/* end preview-only */
-
 async function saveFile(filename, data) {
-  /* preview-only */
-  if (downloads) {
-    try {
-      await downloads.save({ filename, data });
-    } catch (e) {
-      if (e?.code === 'declined') return;
-      if (e?.code === 'rate_limited') toast('A save is already waiting for you to confirm.');
-      else toast('That file could not be saved here.');
-    }
-    return;
-  }
-  /* end preview-only */
   const blob = data instanceof Blob ? data : new Blob([data], { type: 'text/csv' });
   const url = URL.createObjectURL(blob);
   const a = h('a', { href: url, download: filename });
@@ -1952,22 +1933,3 @@ stats.track('visit');
 if (state.lab) stats.once('lab');
 countVisibleTime(stats);
 
-/* preview-only */
-if (inViewer) {
-  // Inside the claude.ai viewer, files can only be offered through the downloads capability.
-  $('#save-csv').disabled = true;
-  $('#save-image').disabled = true;
-  window.claude
-    .use('downloads')
-    .then((api) => {
-      downloads = api;
-      $('#save-csv').disabled = !api;
-      $('#save-image').disabled = !api;
-      if (!api) {
-        $('#save-csv').title = 'Saving files is not available in this view.';
-        $('#save-image').title = 'Saving files is not available in this view.';
-      }
-    })
-    .catch(() => {});
-}
-/* end preview-only */

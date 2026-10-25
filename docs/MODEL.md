@@ -158,7 +158,7 @@ per player lands a little under the filing's; and Japan and the US probably spen
   18 Oct 2026). The cost is the revenue the giveaway takes away: the same season with nothing given away, against the
   one that was run (`freeGemCost`), with the same players and the same dice. That figure does follow the rules, the right way — free
   gems carry a player further on a kind banner, so they displace more spending (featured chance 100%: 11.6% of
-  revenue) than on a harsh one (featured chance 25%: 2.1%). The tile leads with that cost in dollars (her call, 18 Oct 2026), then its share of revenue, then the gems and
+  revenue) than on a harsh one (featured chance 25%: 2.1%). The tile leads with that cost in dollars (18 Oct 2026), then its share of revenue, then the gems and
   the pulls a player they buy (which compares across games whose pulls cost 3 to 600 gems); the shop-price figure
   stays in its (i).
 

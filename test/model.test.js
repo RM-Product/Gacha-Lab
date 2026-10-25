@@ -312,7 +312,7 @@ test('what free gems cost is steady across dice, not a figure that swings with l
 });
 
 test('payers pace their spending over the season instead of finishing on day 1', () => {
-  // her ask, 19 Oct 2026. Before this every payer bought everything on day 1 — 100% of pack money before the
+  // 19 Oct 2026. Before this every payer bought everything on day 1 — 100% of pack money before the
   // season's second day — so the gems a player is given each day could never stand in for a purchase. A flat
   // one-top-up-a-day rule fixed that but strangled anyone chasing a lot, so what a player funds in a day is now
   // their remaining need over the days left.

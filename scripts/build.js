@@ -2,7 +2,7 @@
 // use only named imports and exports, so each one becomes a function scope that registers its
 // exports, in dependency order.
 //
-//   dist/gacha-lab.html  page content for the claude.ai preview (the viewer adds <html>/<head>/<body>)
+//   dist/gacha-lab.html  page content on its own, for a host that supplies <html>/<head>/<body>
 //   dist/index.html     the same page as a full document, ready for any static host
 //   dist/app.js         the bundled script on its own, for `node --check`
 
